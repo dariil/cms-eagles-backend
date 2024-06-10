@@ -67,7 +67,25 @@ class UserController extends Controller
 
     //GET REQUESTS
     function getUsers($access_level){
-        $users = User::where('access_level', $access_level)->get();
+        $users = User::where('access_level', $access_level)
+                 ->with('club:club_id,club_name')
+                 ->get()
+                 ->map(function ($user) {
+                     return [
+                         'user_id' => $user->user_id,
+                         'club_id' => $user->club_id,
+                         'first_name' => $user->first_name,
+                         'middle_name' => $user->middle_name,
+                         'last_name' => $user->last_name,
+                         'number' => $user->number,
+                         'email' => $user->email,
+                         'access_level' => $user->access_level,
+                         'date_created' => $user->date_created,
+                         'club_id' => $user->club->club_id,
+                         'club_name' => $user->club->club_name,
+                     ];
+                 });
+
         return response()->json($users);
         // return User::all();
     }

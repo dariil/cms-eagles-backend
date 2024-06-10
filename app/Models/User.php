@@ -29,6 +29,11 @@ class User extends Authenticatable
         'access_level',
     ];
 
+    public function club()
+    {
+        return $this->belongsTo(Club::class, 'club_id', 'club_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

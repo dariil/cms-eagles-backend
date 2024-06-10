@@ -31,7 +31,7 @@ Route::get('getOfficials/{club_id}',[ContentController::class, 'getOfficials']);
 Route::get('getRecentAnnouncement/{club_id}',[ContentController::class, 'getRecentAnnouncement']);
 
 //UNDER MAINTENANCE GET
-// Route::get('getUsersInClub/{club_id}/{access_level}',[UserController::class, 'getUsersInClub']);
+Route::get('getUsersInClub/{club_id}/{access_level}',[UserController::class, 'getUsersInClub']);
 
 //UPDATE
 Route::post('updateHome/{home_id}',[ContentController::class, 'updateHome']);
