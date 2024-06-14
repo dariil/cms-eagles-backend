@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\ApplicationsController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -18,6 +19,7 @@ Route::post('addAnnouncement/{club_id}',[ContentController::class, 'addAnnouncem
 Route::post('addHome',[ContentController::class, 'addHome']);
 Route::post('addProjects',[ContentController::class, 'addProjects']);
 Route::post('addOfficers/{club_id}',[ContentController::class, 'addOfficers']);
+Route::post('addApplication/{club_id}',[ApplicationsController::class, 'addApplication']);
 
 //GET
 Route::get('getAnnouncementsInClub/{club_id}',[ContentController::class, 'getAnnouncementsInClub']);
