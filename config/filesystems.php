@@ -71,6 +71,7 @@ return [
 
     'links' => [
         public_path('assets') => storage_path('app/assets'),
+        public_path('magiting_laguna/applications') => storage_path('app/magiting_laguna/applications'),
     ],
 
 ];

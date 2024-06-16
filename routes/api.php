@@ -19,7 +19,7 @@ Route::post('addAnnouncement/{club_id}',[ContentController::class, 'addAnnouncem
 Route::post('addHome',[ContentController::class, 'addHome']);
 Route::post('addProjects',[ContentController::class, 'addProjects']);
 Route::post('addOfficers/{club_id}',[ContentController::class, 'addOfficers']);
-Route::post('addApplication/{club_id}',[ApplicationsController::class, 'addApplication']);
+Route::post('addApplication',[ApplicationsController::class, 'addApplication']);
 
 //GET
 Route::get('getAnnouncementsInClub/{club_id}',[ContentController::class, 'getAnnouncementsInClub']);
@@ -31,6 +31,7 @@ Route::get('getHome/{club_id}',[ContentController::class, 'getHome']);
 Route::get('getAboutClub/{club_id}',[ContentController::class, 'getAboutClub']);
 Route::get('getOfficials/{club_id}',[ContentController::class, 'getOfficials']);
 Route::get('getRecentAnnouncement/{club_id}',[ContentController::class, 'getRecentAnnouncement']);
+Route::get('getApplications/{club_id}',[ApplicationsController::class, 'getApplications']);
 
 //UNDER MAINTENANCE GET
 Route::get('getUsersInClub/{club_id}/{access_level}',[UserController::class, 'getUsersInClub']);
