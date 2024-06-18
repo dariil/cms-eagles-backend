@@ -32,6 +32,8 @@ Route::get('getAboutClub/{club_id}',[ContentController::class, 'getAboutClub']);
 Route::get('getOfficials/{club_id}',[ContentController::class, 'getOfficials']);
 Route::get('getRecentAnnouncement/{club_id}',[ContentController::class, 'getRecentAnnouncement']);
 Route::get('getApplications/{club_id}',[ApplicationsController::class, 'getApplications']);
+Route::get('getOneApplication/{club_id}',[ApplicationsController::class, 'getOneApplication']);
+
 
 //UNDER MAINTENANCE GET
 Route::get('getUsersInClub/{club_id}/{access_level}',[UserController::class, 'getUsersInClub']);

@@ -46,4 +46,9 @@ class ApplicationsController extends Controller
         $applications = Applications::where('club_id', $club_id)->get();
         return response()->json($applications);
     }
+
+    function getOneApplication($application_id){
+        $application = Applications::where('application_id', $application_id)->get();
+        return response()->json($application);
+    }
 }
