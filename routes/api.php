@@ -53,13 +53,16 @@ Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function ()
 });
 Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, 'getApplicationDetails']);
 
+
+//FOR VERCEL DEPLOYMENT
 Route::get('/clear-cache', function() {
     $exitCode = Artisan::call('cache:clear');
     $exitCode = Artisan::call('config:cache');
     return 'DONE'; //Return anything
 });
 
-
+//TEST API
+Route::get('/data', [AuthController::class, 'index']);
 
 
 //UNDER MAINTENANCE GET

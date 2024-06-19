@@ -42,4 +42,14 @@ class AuthController extends BaseController
             'expires_in' => auth()->factory()->getTTL()*60,
         ]; 
     }
+
+    public function index(){
+        $data =[
+            'id' => 1,
+            'name' => "John Doe",
+            "email" => "johndoe@gmail.com",
+        ];
+
+        return response()->json($data);
+    }
 }
