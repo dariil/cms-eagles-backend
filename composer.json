@@ -7,8 +7,14 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
+        "laravel/passport": "^12.2",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "mikehaertl/php-pdftk": "^0.13.1",
+        "php-open-source-saver/jwt-auth": "^2.4",
+        "setasign/fpdi-fpdf": "^2.3",
+        "smalot/pdfparser": "^2.10",
+        "spatie/pdf-to-text": "^1.52"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

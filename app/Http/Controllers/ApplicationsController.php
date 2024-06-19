@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Applications;
+use Illuminate\Support\Facades\File; // Add this import statement
+use mikehaertl\pdftk\Pdf;
 
 class ApplicationsController extends Controller
 {
@@ -50,5 +52,33 @@ class ApplicationsController extends Controller
     function getOneApplication($application_id){
         $application = Applications::where('application_id', $application_id)->get();
         return response()->json($application);
+    }
+
+    function getApplicationDetails($application_file){
+        $path = 'http://127.0.0.1:8000/applications/' . $application_file;
+        $path = trim($path);
+        // return $path;
+        // return $path;
+        // if (!File::exists($path)) {
+        //     return response()->json(['error' => 'File not found.'], 404);
+        // }
+
+        try {
+            $pdf = new Pdf($path);
+            // $result = $pdf->allow('AllFeatures');
+            $formFields = $pdf->getDataFields();
+
+            if ($formFields === false) {
+                $error = $pdf->getError();
+            }
+
+            return response()->json([
+                'filename' => $path,
+                'form_fields' => $formFields,
+                'error' => $error,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
