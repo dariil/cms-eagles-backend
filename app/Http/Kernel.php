@@ -14,7 +14,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \App\Http\Middleware\CorsMiddleware::class, // Ensure this middleware is included for CORS handling
+        // \App\Http\Middleware\CorsMiddleware::class, // Ensure this middleware is included for CORS handling
         // HandleCors::class,
         // Other middleware
     ];
@@ -33,6 +33,7 @@ class Kernel extends HttpKernel
             // Middleware for API routes
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\HandleCors::class,
         ],
     ];
 
@@ -45,7 +46,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
-        'cors' => \App\Http\Middleware\CorsMiddleware::class, // Example: Custom CORS middleware if needed
+        // 'cors' => \App\Http\Middleware\CorsMiddleware::class, // Example: Custom CORS middleware if needed
         // Other middleware
     ];
 

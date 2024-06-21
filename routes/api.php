@@ -52,7 +52,7 @@ Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function ()
     // Other routes
 });
 Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, 'getApplicationDetails']);
-
+Route::get('get-pdf/{applicationID}', [ApplicationsController::class, 'getPdf']);
 
 //FOR VERCEL DEPLOYMENT
 Route::get('/clear-cache', function() {
@@ -75,6 +75,7 @@ Route::post('updateProjects/{projects_id}',[ContentController::class, 'updatePro
 Route::post('updateAbout/{club_id}',[ContentController::class, 'updateAbout']);
 Route::post('updateOfficer/{official_id}',[ContentController::class, 'updateOfficer']);
 Route::post('updateUser/{user_id}',[UserController::class, 'updateUser']);
+Route::post('updateApplication/{application_id}',[ApplicationsController::class, 'updateApplication']);
 
 //DELETE
 Route::delete('deleteUser/{user_id}',[UserController::class, 'deleteUser']);

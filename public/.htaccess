@@ -1,5 +1,6 @@
 <IfModule mod_rewrite.c>
-    Header always set Access-Control-Allow-Origin "*"
+    Header add Access-Control-Allow-Origin "http://localhost:5173" # Replace with the origin of your React app
+    Header add Access-Control-Allow-Headers "origin, content-type, accept"
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
