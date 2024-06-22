@@ -121,4 +121,27 @@ class ApplicationsController extends Controller
             ]);
         }
     }
+
+
+    //DELETE REQUESTS
+    function deleteApplication($application_id){
+        $result = Applications::where('application_id', $application_id)->delete();
+        if($result){
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Application has been deleted permanently.'
+                ],
+                'response' => $result
+            ];
+            return response()->json($response);
+        } else{
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to delete application.'
+                ]
+            ]);
+        }
+    }
 }

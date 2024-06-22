@@ -82,3 +82,4 @@ Route::delete('deleteUser/{user_id}',[UserController::class, 'deleteUser']);
 Route::delete('deleteAnnouncement/{announcement_id}',[ContentController::class, 'deleteAnnouncement']);
 Route::delete('deleteProject/{project_id}',[ContentController::class, 'deleteProject']);
 Route::delete('deleteOfficer/{officer_id}',[ContentController::class, 'deleteOfficer']);
+Route::delete('deleteApplication/{application_id}',[ApplicationsController::class, 'deleteApplication']);
