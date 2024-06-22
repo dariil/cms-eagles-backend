@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ApplicationsController;
+use App\Http\Controllers\ArchivesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\CorsMiddleware;
 
@@ -53,6 +54,7 @@ Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function ()
 });
 Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, 'getApplicationDetails']);
 Route::get('get-pdf/{applicationID}', [ApplicationsController::class, 'getPdf']);
+Route::get('getArchivedAnnouncements/{announcement_id}', [ArchivesController::class, 'getArchivedAnnouncements']);
 
 //FOR VERCEL DEPLOYMENT
 Route::get('/clear-cache', function() {
@@ -83,3 +85,10 @@ Route::delete('deleteAnnouncement/{announcement_id}',[ContentController::class, 
 Route::delete('deleteProject/{project_id}',[ContentController::class, 'deleteProject']);
 Route::delete('deleteOfficer/{officer_id}',[ContentController::class, 'deleteOfficer']);
 Route::delete('deleteApplication/{application_id}',[ApplicationsController::class, 'deleteApplication']);
+Route::delete('deleteAnnouncement/{announcement_id}',[ArchivesController::class, 'deleteAnnouncement']);
+
+//ARCHIVING APIs
+Route::post('archiveAnnouncement/{announcement_id}', [ArchivesController::class, 'archiveAnnouncement']);
+
+//RETURN ARCHIVED APIs
+Route::post('restoreAnnouncement/{announcement_id}', [ArchivesController::class, 'restoreAnnouncement']);
