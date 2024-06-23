@@ -55,6 +55,7 @@ Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function ()
 Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, 'getApplicationDetails']);
 Route::get('get-pdf/{applicationID}', [ApplicationsController::class, 'getPdf']);
 Route::get('getArchivedAnnouncements/{announcement_id}', [ArchivesController::class, 'getArchivedAnnouncements']);
+Route::get('getArchivedProjects/{project_id}', [ArchivesController::class, 'getArchivedProjects']);
 
 //FOR VERCEL DEPLOYMENT
 Route::get('/clear-cache', function() {
@@ -89,6 +90,8 @@ Route::delete('deleteAnnouncement/{announcement_id}',[ArchivesController::class,
 
 //ARCHIVING APIs
 Route::post('archiveAnnouncement/{announcement_id}', [ArchivesController::class, 'archiveAnnouncement']);
+Route::post('archiveProject/{project_id}', [ArchivesController::class, 'archiveProject']);
 
 //RETURN ARCHIVED APIs
 Route::post('restoreAnnouncement/{announcement_id}', [ArchivesController::class, 'restoreAnnouncement']);
+Route::post('restoreProject/{project_id}', [ArchivesController::class, 'restoreProject']);
