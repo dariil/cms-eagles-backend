@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement_Archive;
 use App\Models\Project_Archive;
+use App\Models\Official_Archive;
 
 use App\Models\Announcement;
 use App\Models\Project;
+use App\Models\Officers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -137,6 +139,59 @@ class ArchivesController extends Controller
         }
     }
 
+    function archiveOfficer($officer_id, Request $request){
+        try {
+            DB::beginTransaction();
+
+            // Fetch the announcement
+            $officer = DB::table('tbl_officials')
+                ->where('official_id', $officer_id)
+                ->first();
+
+            if (!$officer) {
+                $response = [
+                    'messages' => [
+                        'status' => 1,
+                        'message' => 'Officer not found'
+                    ],
+                ];
+                return response()->json($response);
+            }
+
+            // Insert into archived table
+            DB::table('tbl_archived_officials')->insert([
+                'official_id' => $officer->official_id,
+                'club_id' => $officer->club_id,
+                'official_name' => $officer->official_name,
+                'official_position' => $officer->official_position,
+                'official_image' => $officer->official_image,
+                'official_description' => $officer->official_description,
+            ]);
+
+            // Delete from original table
+            DB::table('tbl_officials')
+                ->where('official_id', $officer_id)
+                ->delete();
+
+            DB::commit();
+
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Officer has been archived successfully'
+                ],
+                'response' => $officer
+            ];
+
+            return response()->json($response);
+
+            // return response()->json(['message' => 'Announcement archived successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred while archiving the officer: ' . $e->getMessage()], 500);
+        }
+    }
+
     //MOVE BACK TO POSTS FUNCTION APIs
     function restoreAnnouncement($announcement_id, Request $request){
         try {
@@ -231,6 +286,50 @@ class ArchivesController extends Controller
                 'messages' => [
                     'status' => 0,
                     'message' => 'An error occurred while restoring the project: ' . $e->getMessage()
+                ]
+            ], 500);
+        }
+    }
+
+    function restoreOfficer($officer_id, Request $request){
+        try {
+            DB::beginTransaction();
+    
+            // Fetch the archived announcement
+            $archivedOfficial = Official_Archive::findOrFail($officer_id);
+    
+            // Create a new Announcement
+            $newOfficial = new Officers([
+                'club_id' => $archivedOfficial->club_id,
+                'official_name' => $archivedOfficial->official_name,
+                'official_position' => $archivedOfficial->official_position,
+                'official_image' => $archivedOfficial->official_image,
+                'official_description' => $archivedOfficial->official_description,
+            ]);
+    
+            // Save the new announcement
+            $newOfficial->save();
+    
+            // Delete the archived announcement
+            $archivedOfficial->delete();
+    
+            DB::commit();
+    
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Officer has been restored successfully'
+                ],
+                'response' => $newOfficial
+            ];
+    
+            return response()->json($response);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'An error occurred while restoring the officer: ' . $e->getMessage()
                 ]
             ], 500);
         }

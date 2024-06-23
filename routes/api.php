@@ -91,7 +91,9 @@ Route::delete('deleteAnnouncement/{announcement_id}',[ArchivesController::class,
 //ARCHIVING APIs
 Route::post('archiveAnnouncement/{announcement_id}', [ArchivesController::class, 'archiveAnnouncement']);
 Route::post('archiveProject/{project_id}', [ArchivesController::class, 'archiveProject']);
+Route::post('archiveOfficer/{officer_id}', [ArchivesController::class, 'archiveOfficer']);
 
 //RETURN ARCHIVED APIs
 Route::post('restoreAnnouncement/{announcement_id}', [ArchivesController::class, 'restoreAnnouncement']);
 Route::post('restoreProject/{project_id}', [ArchivesController::class, 'restoreProject']);
+Route::post('restoreOfficer/{officer_id}', [ArchivesController::class, 'restoreOfficer']);
