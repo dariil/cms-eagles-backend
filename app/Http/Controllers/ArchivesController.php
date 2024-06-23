@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Announcement_Archive;
 use App\Models\Project_Archive;
 use App\Models\Official_Archive;
+use App\Models\Application_Archive;
 
 use App\Models\Announcement;
 use App\Models\Project;
 use App\Models\Officers;
+use App\Models\Applications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -192,6 +194,61 @@ class ArchivesController extends Controller
         }
     }
 
+    function archiveApplication($application_id, Request $request){
+        try {
+            DB::beginTransaction();
+
+            // Fetch the announcement
+            $application = DB::table('tbl_applications')
+                ->where('application_id', $application_id)
+                ->first();
+
+            if (!$application) {
+                $response = [
+                    'messages' => [
+                        'status' => 1,
+                        'message' => 'Application not found'
+                    ],
+                ];
+                return response()->json($response);
+            }
+
+            // Insert into archived table
+            DB::table('tbl_archived_applications')->insert([
+                'application_id' => $application->application_id,
+                'firstname' => $application->firstname,
+                'middlename' => $application->middlename,
+                'lastname' => $application->lastname,
+                'email' => $application->email,
+                'number' => $application->number,
+                'application_file' => $application->application_file,
+                'club_id' => $application->club_id,
+            ]);
+
+            // Delete from original table
+            DB::table('tbl_applications')
+                ->where('application_id', $application_id)
+                ->delete();
+
+            DB::commit();
+
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Application has been archived successfully'
+                ],
+                'response' => $application
+            ];
+
+            return response()->json($response);
+
+            // return response()->json(['message' => 'Announcement archived successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred while archiving the application: ' . $e->getMessage()], 500);
+        }
+    }
+
     //MOVE BACK TO POSTS FUNCTION APIs
     function restoreAnnouncement($announcement_id, Request $request){
         try {
@@ -335,6 +392,52 @@ class ArchivesController extends Controller
         }
     }
 
+    function restoreApplication($application_id, Request $request){
+        try {
+            DB::beginTransaction();
+    
+            // Fetch the archived announcement
+            $archivedApplication = Application_Archive::findOrFail($application_id);
+    
+            // Create a new Announcement
+            $newApplication = new Applications([
+                'firstname' => $archivedApplication->firstname,
+                'middlename' => $archivedApplication->middlename,
+                'lastname' => $archivedApplication->lastname,
+                'email' => $archivedApplication->email,
+                'number' => $archivedApplication->number,
+                'application_file' => $archivedApplication->application_file,
+                'club_id' => $archivedApplication->club_id,
+            ]);
+    
+            // Save the new announcement
+            $newApplication->save();
+    
+            // Delete the archived announcement
+            $archivedApplication->delete();
+    
+            DB::commit();
+    
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Application has been restored successfully'
+                ],
+                'response' => $newApplication
+            ];
+    
+            return response()->json($response);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'An error occurred while restoring the application: ' . $e->getMessage()
+                ]
+            ], 500);
+        }
+    }
+
     //DELETE APIs
     function deleteAnnouncement($announcement_id){
         $result = Announcement_Archive::where('announcement_id', $announcement_id)->delete();
@@ -352,6 +455,48 @@ class ArchivesController extends Controller
                 'messages' => [
                     'status' => 0,
                     'message' => 'Failed to delete announcement.'
+                ]
+            ]);
+        }
+    }
+
+    function deleteProject($project_id){
+        $result = Project_Archive::where('project_id', $project_id)->delete();
+        if($result){
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Project has been deleted permanently.'
+                ],
+                'response' => $result
+            ];
+            return response()->json($response);
+        } else{
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to delete project.'
+                ]
+            ]);
+        }
+    }
+
+    function deleteOfficer($official_id){
+        $result = Official_Archive::where('official_id', $official_id)->delete();
+        if($result){
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Officer has been deleted permanently.'
+                ],
+                'response' => $result
+            ];
+            return response()->json($response);
+        } else{
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to delete officer.'
                 ]
             ]);
         }
