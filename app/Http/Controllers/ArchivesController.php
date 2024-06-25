@@ -6,18 +6,71 @@ use App\Models\Announcement_Archive;
 use App\Models\Project_Archive;
 use App\Models\Official_Archive;
 use App\Models\Application_Archive;
+use App\Models\Account_Archive;
 
 use App\Models\Announcement;
 use App\Models\Project;
 use App\Models\Officers;
 use App\Models\Applications;
+use App\Models\User;
+use App\Models\Club;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class ArchivesController extends Controller
 {
     //GET FUNCTIONS
+    function getAllArchivedUsers() {
+        $users = Account_Archive::with('club:club_id,club_name')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'user_id' => $user->user_id,
+                    'club_id' => $user->club_id,
+                    'first_name' => $user->first_name,
+                    'middle_name' => $user->middle_name,
+                    'last_name' => $user->last_name,
+                    'number' => $user->number,
+                    'email' => $user->email,
+                    'access_level' => $user->access_level,
+                    'date_created' => $user->date_created,
+                    'club_name' => $user->club->club_name,
+                ];
+            });
+        return response()->json($users);
+    }
+
+    function getOneUser($user_id){
+        $users = Account_Archive::where('user_id', $user_id)->get();
+        return response()->json($users);
+    }
+
+    // function getUsers($access_level){
+    //     $users = User::where('access_level', $access_level)
+    //              ->with('club:club_id,club_name')
+    //              ->get()
+    //              ->map(function ($user) {
+    //                  return [
+    //                      'user_id' => $user->user_id,
+    //                      'club_id' => $user->club_id,
+    //                      'first_name' => $user->first_name,
+    //                      'middle_name' => $user->middle_name,
+    //                      'last_name' => $user->last_name,
+    //                      'number' => $user->number,
+    //                      'email' => $user->email,
+    //                      'access_level' => $user->access_level,
+    //                      'date_created' => $user->date_created,
+    //                      'club_id' => $user->club->club_id,
+    //                      'club_name' => $user->club->club_name,
+    //                  ];
+    //              });
+
+    //     return response()->json($users);
+    //     // return User::all();
+    // }
+
     function getArchivedAnnouncements($club_id){
         $announcements = Announcement_Archive::where('club_id', $club_id)->get();
         return response()->json($announcements);
@@ -27,8 +80,74 @@ class ArchivesController extends Controller
         $projects = Project_Archive::where('club_id', $club_id)->get();
         return response()->json($projects);
     }
+    function getArchivedOfficers($club_id){
+        $officers = Official_Archive::where('club_id', $club_id)->get();
+        return response()->json($officers);
+    }
+
+    function getArchivedApplications($club_id){
+        $applications = Application_Archive::where('club_id', $club_id)->get();
+        return response()->json($applications);
+    }
 
     // MOVE TO ARCHIVE FUNCTION APIs
+    function archiveUser($user_id, Request $request){
+        try {
+            DB::beginTransaction();
+
+            // Fetch the announcement
+            $user = DB::table('tbl_users')
+                ->where('user_id', $user_id)
+                ->first();
+
+            if (!$user) {
+                $response = [
+                    'messages' => [
+                        'status' => 1,
+                        'message' => 'User not found'
+                    ],
+                ];
+                return response()->json($response);
+            }
+
+            // Insert into archived table
+            DB::table('tbl_archived_accounts')->insert([
+                'user_id' => $user->user_id,
+                'club_id' => $user->club_id,
+                'first_name' => $user->first_name,
+                'middle_name' => $user->middle_name,
+                'last_name' => $user->last_name,
+                'number' => $user->number,
+                'email' => $user->email,
+                'password' => $user->password,
+                'access_level' => $user->access_level,
+                'date_created' => $user->date_created,
+            ]);
+
+            // Delete from original table
+            DB::table('tbl_users')
+                ->where('user_id', $user_id)
+                ->delete();
+
+            DB::commit();
+
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Account archived successfully'
+                ],
+                'response' => $user
+            ];
+
+            return response()->json($response);
+
+            // return response()->json(['message' => 'Announcement archived successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred while archiving the user: ' . $e->getMessage()], 500);
+        }
+    }
+
     function archiveAnnouncement($announcement_id, Request $request){
         try {
             DB::beginTransaction();
@@ -250,6 +369,58 @@ class ArchivesController extends Controller
     }
 
     //MOVE BACK TO POSTS FUNCTION APIs
+    function restoreUser($user_id, Request $request){
+        try {
+            DB::beginTransaction();
+    
+            // Fetch the archived announcement
+            $archivedUser = Account_Archive::findOrFail($user_id);
+    
+            // Create a new Announcement
+            $newUser = new User([
+                'club_id' => $archivedUser->club_id,
+                'first_name' => $archivedUser->first_name,
+                'middle_name' => $archivedUser->middle_name,
+                'last_name' => $archivedUser->last_name,
+                'number' => $archivedUser->number,
+                'email' => $archivedUser->email,
+                'password' => $archivedUser->password,
+                'access_level' => $archivedUser->access_level,
+            ]);
+    
+            // Save the new announcement
+            $newUser->save();
+    
+            // // Update timestamps if needed
+            // $newAnnouncement->created_at = $archivedAnnouncement->created_at;
+            // $newAnnouncement->updated_at = $archivedAnnouncement->updated_at;
+            // $newAnnouncement->save();
+    
+            // Delete the archived announcement
+            $archivedUser->delete();
+    
+            DB::commit();
+    
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'User restored successfully'
+                ],
+                'response' => $newUser
+            ];
+    
+            return response()->json($response);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'An error occurred while restoring the user: ' . $e->getMessage()
+                ]
+            ], 500);
+        }
+    }
+
     function restoreAnnouncement($announcement_id, Request $request){
         try {
             DB::beginTransaction();

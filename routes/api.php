@@ -56,6 +56,10 @@ Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, '
 Route::get('get-pdf/{applicationID}', [ApplicationsController::class, 'getPdf']);
 Route::get('getArchivedAnnouncements/{announcement_id}', [ArchivesController::class, 'getArchivedAnnouncements']);
 Route::get('getArchivedProjects/{project_id}', [ArchivesController::class, 'getArchivedProjects']);
+Route::get('getAllArchivedUsers', [ArchivesController::class, 'getAllArchivedUsers']);
+Route::get('getOneArchivedUser/{user_id}', [ArchivesController::class, 'getOneUser']);
+Route::get('getArchivedOfficers/{club_id}', [ArchivesController::class, 'getArchivedOfficers']);
+Route::get('getArchivedApplications/{club_id}', [ArchivesController::class, 'getArchivedApplications']);
 
 //FOR VERCEL DEPLOYMENT
 Route::get('/clear-cache', function() {
@@ -89,12 +93,14 @@ Route::delete('deleteApplication/{application_id}',[ApplicationsController::clas
 Route::delete('deleteAnnouncement/{announcement_id}',[ArchivesController::class, 'deleteAnnouncement']);
 
 //ARCHIVING APIs
+Route::post('archiveUser/{user_id}', [ArchivesController::class, 'archiveUser']);
 Route::post('archiveAnnouncement/{announcement_id}', [ArchivesController::class, 'archiveAnnouncement']);
 Route::post('archiveProject/{project_id}', [ArchivesController::class, 'archiveProject']);
 Route::post('archiveOfficer/{officer_id}', [ArchivesController::class, 'archiveOfficer']);
 Route::post('archiveApplication/{application_id}', [ArchivesController::class, 'archiveApplication']);
 
 //RETURN ARCHIVED APIs
+Route::post('restoreUser/{user_id}', [ArchivesController::class, 'restoreUser']);
 Route::post('restoreAnnouncement/{announcement_id}', [ArchivesController::class, 'restoreAnnouncement']);
 Route::post('restoreProject/{project_id}', [ArchivesController::class, 'restoreProject']);
 Route::post('restoreOfficer/{officer_id}', [ArchivesController::class, 'restoreOfficer']);
