@@ -38,6 +38,8 @@ Route::post('addApplication',[ApplicationsController::class, 'addApplication']);
 Route::post('expLogin',[UserController::class,'userLogin']);
 
 //GET
+Route::get('getUsersInClub/{club_id}/{access_level}',[UserController::class, 'getUsersInClub']);
+Route::get('getAdminInClub/{club_id}/{access_level}',[UserController::class, 'getUsersInClub']);
 Route::get('getAnnouncementsInClub/{club_id}',[ContentController::class, 'getAnnouncementsInClub']);
 Route::get('getProjectsInClub/{club_id}',[ContentController::class, 'getProjectsInClub']);
 Route::get('getUsers/{access_level}',[UserController::class, 'getUsers']);
@@ -68,13 +70,6 @@ Route::get('/clear-cache', function() {
     return 'DONE'; //Return anything
 });
 
-//TEST API
-Route::get('/data', [AuthController::class, 'index']);
-
-
-//UNDER MAINTENANCE GET
-Route::get('getUsersInClub/{club_id}/{access_level}',[UserController::class, 'getUsersInClub']);
-
 //UPDATE
 Route::post('updateHome/{home_id}',[ContentController::class, 'updateHome']);
 Route::post('updateAnnouncement/{announcement_id}',[ContentController::class, 'updateAnnouncement']);
@@ -85,12 +80,11 @@ Route::post('updateUser/{user_id}',[UserController::class, 'updateUser']);
 Route::post('updateApplication/{application_id}',[ApplicationsController::class, 'updateApplication']);
 
 //DELETE
-Route::delete('deleteUser/{user_id}',[UserController::class, 'deleteUser']);
-Route::delete('deleteAnnouncement/{announcement_id}',[ContentController::class, 'deleteAnnouncement']);
-Route::delete('deleteProject/{project_id}',[ContentController::class, 'deleteProject']);
-Route::delete('deleteOfficer/{officer_id}',[ContentController::class, 'deleteOfficer']);
-Route::delete('deleteApplication/{application_id}',[ApplicationsController::class, 'deleteApplication']);
+Route::delete('deleteUser/{user_id}',[ArchivesController::class, 'deleteUser']);
 Route::delete('deleteAnnouncement/{announcement_id}',[ArchivesController::class, 'deleteAnnouncement']);
+Route::delete('deleteProject/{project_id}',[ArchivesController::class, 'deleteProject']);
+Route::delete('deleteOfficer/{officer_id}',[ArchivesController::class, 'deleteOfficer']);
+Route::delete('deleteApplication/{application_id}',[ArchivesController::class, 'deleteApplication']);
 
 //ARCHIVING APIs
 Route::post('archiveUser/{user_id}', [ArchivesController::class, 'archiveUser']);

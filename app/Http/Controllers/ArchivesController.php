@@ -610,6 +610,28 @@ class ArchivesController extends Controller
     }
 
     //DELETE APIs
+    function deleteUser($user_id){
+        $result = Account_Archive::where('user_id', $user_id)->delete();
+        if($result){
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'User has been deleted permanently.'
+                ],
+                'response' => $result
+            ];
+            return response()->json($response);
+        } else{
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to delete product.'
+                ]
+            ]);
+        }
+        // return $id;
+    }
+
     function deleteAnnouncement($announcement_id){
         $result = Announcement_Archive::where('announcement_id', $announcement_id)->delete();
         if($result){
@@ -668,6 +690,27 @@ class ArchivesController extends Controller
                 'messages' => [
                     'status' => 0,
                     'message' => 'Failed to delete officer.'
+                ]
+            ]);
+        }
+    }
+
+    function deleteApplication($application_id){
+        $result = Application_Archive::where('application_id', $application_id)->delete();
+        if($result){
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Application has been deleted permanently.'
+                ],
+                'response' => $result
+            ];
+            return response()->json($response);
+        } else{
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to delete application.'
                 ]
             ]);
         }
