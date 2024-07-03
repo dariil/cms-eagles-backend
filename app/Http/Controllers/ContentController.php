@@ -142,6 +142,11 @@ class ContentController extends Controller
         return response()->json($announcement);
     }
 
+    function getRecentProject($club_id){
+        $project = Project::orderBy('created_at', 'desc')->take(1)->get();
+        return response()->json($project);
+    }
+
     function getHome($club_id){
         $home = Home::where('club_id', $club_id)->get();
         return response()->json($home);
@@ -165,6 +170,9 @@ class ContentController extends Controller
     //   UPDATE REQUESTS //////////////////////////////////////
     function updateHome($home_id, Request $req){
         $home = Home::find($home_id);
+        $home->hero_title=$req->input('home_title');
+        $home->hero_tagline=$req->input('home_tagline');
+        $home->hero_video=$req->file('video')->store('assets');
         $home->logo=$req->file('image')->store('assets');
         $home->description=$req->input('description');
         $home->updated_at=Carbon::now();

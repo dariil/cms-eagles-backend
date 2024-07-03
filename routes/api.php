@@ -49,11 +49,13 @@ Route::get('getHome/{club_id}',[ContentController::class, 'getHome']);
 Route::get('getAboutClub/{club_id}',[ContentController::class, 'getAboutClub']);
 Route::get('getOfficials/{club_id}',[ContentController::class, 'getOfficials']);
 Route::get('getRecentAnnouncement/{club_id}',[ContentController::class, 'getRecentAnnouncement']);
+Route::get('getRecentProject/{club_id}',[ContentController::class, 'getRecentProject']);
 Route::get('getApplications/{club_id}',[ApplicationsController::class, 'getApplications']);
+
 Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function () {
     Route::get('getOneApplication/{club_id}', [ApplicationsController::class, 'getOneApplication']);
-    // Other routes
 });
+
 Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, 'getApplicationDetails']);
 Route::get('get-pdf/{applicationID}', [ApplicationsController::class, 'getPdf']);
 Route::get('getArchivedAnnouncements/{announcement_id}', [ArchivesController::class, 'getArchivedAnnouncements']);
