@@ -138,12 +138,12 @@ class ContentController extends Controller
     }
 
     function getRecentAnnouncement($club_id){
-        $announcement = Announcement::orderBy('created_at', 'desc')->take(1)->get();
+        $announcement = Announcement::orderBy('created_at', 'desc')->where('club_id', $club_id)->take(2)->get();
         return response()->json($announcement);
     }
 
     function getRecentProject($club_id){
-        $project = Project::orderBy('created_at', 'desc')->take(1)->get();
+        $project = Project::orderBy('created_at', 'desc')->take(1)->where('club_id', $club_id)->get();
         return response()->json($project);
     }
 
