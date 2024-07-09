@@ -93,6 +93,7 @@ Route::delete('deleteAnnouncement/{announcement_id}',[ArchivesController::class,
 Route::delete('deleteProject/{project_id}',[ArchivesController::class, 'deleteProject']);
 Route::delete('deleteOfficer/{officer_id}',[ArchivesController::class, 'deleteOfficer']);
 Route::delete('deleteApplication/{application_id}',[ArchivesController::class, 'deleteApplication']);
+Route::delete('deleteMemberApplication/{application_id}',[ArchivesController::class, 'deleteMemberApplication']);
 
 //ARCHIVING APIs
 Route::post('archiveUser/{user_id}', [ArchivesController::class, 'archiveUser']);

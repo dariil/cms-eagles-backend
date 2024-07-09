@@ -825,4 +825,25 @@ class ArchivesController extends Controller
             ]);
         }
     }
+
+    function deleteMemberApplication($application_id){
+        $result = Member_Applications_Archive::where('member_application_id', $application_id)->delete();
+        if($result){
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Application has been deleted permanently.'
+                ],
+                'response' => $result
+            ];
+            return response()->json($response);
+        } else{
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to delete application.'
+                ]
+            ]);
+        }
+    }
 }
