@@ -9,7 +9,7 @@ class Applications extends Model
 {
     use HasFactory;
 
-    protected $table = 'tbl_applications'; //THIS LINE LETS LARAVEL KNOW THAT THE USERS TABLE IS NAMES AS tbl_users
+    protected $table = 'tbl_applications_aspirants'; //THIS LINE LETS LARAVEL KNOW THAT THE USERS TABLE IS NAMES AS tbl_users
     protected $primaryKey = 'application_id'; // THIS LINE LETS LARAVEL KNOW THAT THIS IS THE PRIMARY KEY
     protected $fillable = [
         'firstname',

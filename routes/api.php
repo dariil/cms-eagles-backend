@@ -34,6 +34,7 @@ Route::post('addHome',[ContentController::class, 'addHome']);
 Route::post('addProjects',[ContentController::class, 'addProjects']);
 Route::post('addOfficers/{club_id}',[ContentController::class, 'addOfficers']);
 Route::post('addApplication',[ApplicationsController::class, 'addApplication']);
+Route::post('addMemberApplication',[ApplicationsController::class, 'addMemberApplication']);
 //
 Route::post('expLogin',[UserController::class,'userLogin']);
 

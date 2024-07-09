@@ -318,7 +318,7 @@ class ArchivesController extends Controller
             DB::beginTransaction();
 
             // Fetch the announcement
-            $application = DB::table('tbl_applications')
+            $application = DB::table('tbl_applications_aspirants')
                 ->where('application_id', $application_id)
                 ->first();
 
@@ -345,7 +345,7 @@ class ArchivesController extends Controller
             ]);
 
             // Delete from original table
-            DB::table('tbl_applications')
+            DB::table('tbl_applications_aspirants')
                 ->where('application_id', $application_id)
                 ->delete();
 

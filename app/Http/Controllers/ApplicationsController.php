@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Applications;
+use App\Models\Member_Applications;
 use Illuminate\Support\Facades\File; // Add this import statement
 use Illuminate\Support\Facades\Storage;
 use mikehaertl\pdftk\Pdf;
@@ -22,6 +23,39 @@ class ApplicationsController extends Controller
         // $application->application_file=$req->input('application_file');
         $application->application_file=$req->file('application_file')->store('magiting_laguna/applications');
         $application->club_id=$req->input('club_id');
+        // return $project;
+        if ($application->save()) {
+            // If record creation is successful
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Application has been submitted successfully.'
+                ],
+                'response' => $application
+            ];
+            return response()->json($response);
+        } else {
+            // If there's an error in record creation
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to submit application.'
+                ]
+            ]);
+        }
+    }
+
+    function addMemberApplication(Request $req){
+        $application = new Member_Applications;
+        $application->firstname=$req->input('firstname');
+        $application->middlename=$req->input('middlename');
+        $application->lastname=$req->input('lastname');
+        $application->email=$req->input('email');
+        $application->number=$req->input('number');
+        // $application->application_file=$req->input('application_file');
+        $application->application_file=$req->file('application_file')->store('magiting_laguna/applications');
+        $application->club_id=$req->input('club_id');
+        $application->position=$req->input('position');
         // return $project;
         if ($application->save()) {
             // If record creation is successful
