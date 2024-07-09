@@ -68,6 +68,7 @@ Route::get('getAllArchivedUsers', [ArchivesController::class, 'getAllArchivedUse
 Route::get('getOneArchivedUser/{user_id}', [ArchivesController::class, 'getOneUser']);
 Route::get('getArchivedOfficers/{club_id}', [ArchivesController::class, 'getArchivedOfficers']);
 Route::get('getArchivedApplications/{club_id}', [ArchivesController::class, 'getArchivedApplications']);
+Route::get('getMemberArchivedApplications/{club_id}', [ArchivesController::class, 'getMemberArchivedApplications']);
 
 //FOR VERCEL DEPLOYMENT
 Route::get('/clear-cache', function() {
@@ -99,6 +100,7 @@ Route::post('archiveAnnouncement/{announcement_id}', [ArchivesController::class,
 Route::post('archiveProject/{project_id}', [ArchivesController::class, 'archiveProject']);
 Route::post('archiveOfficer/{officer_id}', [ArchivesController::class, 'archiveOfficer']);
 Route::post('archiveApplication/{application_id}', [ArchivesController::class, 'archiveApplication']);
+Route::post('archiveMemberApplication/{application_id}', [ArchivesController::class, 'archiveMemberApplication']);
 
 //RETURN ARCHIVED APIs
 Route::post('restoreUser/{user_id}', [ArchivesController::class, 'restoreUser']);
@@ -106,3 +108,4 @@ Route::post('restoreAnnouncement/{announcement_id}', [ArchivesController::class,
 Route::post('restoreProject/{project_id}', [ArchivesController::class, 'restoreProject']);
 Route::post('restoreOfficer/{officer_id}', [ArchivesController::class, 'restoreOfficer']);
 Route::post('restoreApplication/{application_id}', [ArchivesController::class, 'restoreApplication']);
+Route::post('restoreMemberApplication/{application_id}', [ArchivesController::class, 'restoreMemberApplication']);
