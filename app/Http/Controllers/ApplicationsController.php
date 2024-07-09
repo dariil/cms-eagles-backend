@@ -124,6 +124,31 @@ class ApplicationsController extends Controller
         }
     }
 
+    public function getMemberPdf($applicationID)
+    {
+        // Fetch the application data based on the provided $applicationID
+        $application = Member_Applications::findOrFail($applicationID);
+
+        // Get the file path or URL for the application's PDF
+        $filePath = $application->application_file;
+        $filePath = str_replace('magiting_laguna/', '', $filePath);
+
+        // Check if the file exists
+        if (file_exists(public_path($filePath))) {
+            $file = public_path($filePath);
+            $headers = [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+            ];
+
+            return response()->file($file, $headers);
+        } else {
+            echo $filePath;
+            // Handle the case when the file doesn't exist
+            return response()->json(['error' => 'File not found']);
+        }
+    }
+
     //UPDATE REQUESTS
     function updateApplication($application_id, Request $req){
         $application = Applications::find($application_id);
@@ -135,6 +160,49 @@ class ApplicationsController extends Controller
         $application->email = $req->input('email');
         $application->number = $req->input('number');
         $application->club_id = $req->input('club_id');
+        // $application->position = $req->input('position');
+        
+        // Handle file replacement if a new file is uploaded
+        if ($req->hasFile('application_file')) {
+            // Delete the old file
+            if ($application->application_file) {
+                Storage::delete($application->application_file);
+            }
+            
+            // Store the new file
+            $application->application_file = $req->file('application_file')->store('magiting_laguna/applications');
+        }
+        
+        if ($application->save()) {
+            $response = [
+                'messages' => [
+                    'status' => 1,
+                    'message' => 'Application has been updated successfully.'
+                ],
+                'response' => $application
+            ];
+            return response()->json($response);
+        } else {
+            return response()->json([
+                'messages' => [
+                    'status' => 0,
+                    'message' => 'Failed to update application.'
+                ]
+            ]);
+        }
+    }
+
+    function updateMemberApplication($application_id, Request $req){
+        $application = Member_Applications::find($application_id);
+        
+        // Update other fields
+        $application->firstname = $req->input('firstname');
+        $application->middlename = $req->input('middlename');
+        $application->lastname = $req->input('lastname');
+        $application->email = $req->input('email');
+        $application->number = $req->input('number');
+        $application->club_id = $req->input('club_id');
+        $application->position = $req->input('position');
         
         // Handle file replacement if a new file is uploaded
         if ($req->hasFile('application_file')) {

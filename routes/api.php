@@ -56,10 +56,12 @@ Route::get('getMemberApplications/{club_id}',[ApplicationsController::class, 'ge
 
 Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function () {
     Route::get('getOneApplication/{club_id}', [ApplicationsController::class, 'getOneApplication']);
+    Route::get('getOneMemberApplication/{club_id}', [ApplicationsController::class, 'getOneMemberApplication']);
 });
 
 Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, 'getApplicationDetails']);
 Route::get('get-pdf/{applicationID}', [ApplicationsController::class, 'getPdf']);
+Route::get('getMemberPdf/{applicationID}', [ApplicationsController::class, 'getMemberPdf']);
 Route::get('getArchivedAnnouncements/{announcement_id}', [ArchivesController::class, 'getArchivedAnnouncements']);
 Route::get('getArchivedProjects/{project_id}', [ArchivesController::class, 'getArchivedProjects']);
 Route::get('getAllArchivedUsers', [ArchivesController::class, 'getAllArchivedUsers']);
@@ -82,6 +84,7 @@ Route::post('updateAbout/{club_id}',[ContentController::class, 'updateAbout']);
 Route::post('updateOfficer/{official_id}',[ContentController::class, 'updateOfficer']);
 Route::post('updateUser/{user_id}',[UserController::class, 'updateUser']);
 Route::post('updateApplication/{application_id}',[ApplicationsController::class, 'updateApplication']);
+Route::post('updateMemberApplication/{application_id}',[ApplicationsController::class, 'updateMemberApplication']);
 
 //DELETE
 Route::delete('deleteUser/{user_id}',[ArchivesController::class, 'deleteUser']);
