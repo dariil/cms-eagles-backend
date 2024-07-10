@@ -137,6 +137,11 @@ class ContentController extends Controller
         return response()->json($announcements);
     }
 
+    function getOneAnnouncement($announcement_id){
+        $announcements = Announcement::where('announcement_id', $announcement_id)->get();
+        return response()->json($announcements);
+    }
+
     function getRecentAnnouncement($club_id){
         $announcement = Announcement::orderBy('created_at', 'desc')->where('club_id', $club_id)->take(2)->get();
         return response()->json($announcement);
@@ -154,6 +159,11 @@ class ContentController extends Controller
 
     function getProjectsInClub($club_id){
         $project = Project::where('club_id', $club_id)->get();
+        return response()->json($project);
+    }
+
+    function getOneProject($project_id){
+        $project = Project::where('project_id', $project_id)->get();
         return response()->json($project);
     }
 
