@@ -74,6 +74,20 @@ class ApplicationsController extends Controller
         $application->position=$req->input('position');
         // return $project;
         if ($application->save()) {
+            // Fetch the club name
+            $club = DB::table('tbl_clubs')
+                ->where('club_id', $application->club_id)
+                ->first();
+    
+            // Prepare email data
+            $emailData = [
+                'application' => $application,
+                'club_name' => $club->club_name,
+            ];
+    
+            // Send email after successful save
+            Mail::to($application->email)->send(new AspirantSuccessMail($emailData));
+
             // If record creation is successful
             $response = [
                 'messages' => [

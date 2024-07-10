@@ -19,7 +19,11 @@
             overflow: hidden;
         }
         .header {
-            background-color: #ab3732;
+            /* background-color: linear-gradient(to top, #1E1E1E 20%, #ab3732 150%);    */
+            /* opacity: 0.90; */
+            background-image: url('https://i.imgur.com/f9IlbB7.jpeg'); /* Replace with actual URL */
+            background-size: cover;
+            background-position: center;
             padding: 20px;
             text-align: center;
         }
