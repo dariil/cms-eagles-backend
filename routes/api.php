@@ -51,6 +51,7 @@ Route::get('getOneUser/{user_id}',[UserController::class, 'getOneUser']);
 Route::get('getHome/{club_id}',[ContentController::class, 'getHome']);
 Route::get('getAboutClub/{club_id}',[ContentController::class, 'getAboutClub']);
 Route::get('getOfficials/{club_id}',[ContentController::class, 'getOfficials']);
+Route::get('getOneOfficer/{officer_id}',[ContentController::class, 'getOneOfficer']);
 Route::get('getRecentAnnouncement/{club_id}',[ContentController::class, 'getRecentAnnouncement']);
 Route::get('getRecentProject/{club_id}',[ContentController::class, 'getRecentProject']);
 Route::get('getApplications/{club_id}',[ApplicationsController::class, 'getApplications']);

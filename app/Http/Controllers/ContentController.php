@@ -177,16 +177,30 @@ class ContentController extends Controller
         return response()->json($officers);
     }
 
+    function getOneOfficer($officer_id){
+        $officers = Officers::where('official_id', $officer_id)->get();
+        return response()->json($officers);
+    }
+
     //   UPDATE REQUESTS //////////////////////////////////////
     function updateHome($home_id, Request $req){
         $home = Home::find($home_id);
-        $home->hero_title=$req->input('home_title');
-        $home->hero_tagline=$req->input('home_tagline');
-        $home->hero_video=$req->file('video')->store('assets');
-        $home->logo=$req->file('image')->store('assets');
-        $home->description=$req->input('description');
-        $home->updated_at=Carbon::now();
-        $home->save();
+        $home->hero_title = $req->input('home_title');
+        $home->hero_tagline = $req->input('home_tagline');
+        $home->description = $req->input('description');
+    
+        // Check if a new video file was uploaded
+        if ($req->hasFile('video')) {
+            $home->hero_video = $req->file('video')->store('assets');
+        }
+    
+        // Check if a new image file was uploaded
+        if ($req->hasFile('image')) {
+            $home->logo = $req->file('image')->store('assets');
+        }
+    
+        $home->updated_at = Carbon::now();
+    
         if ($home->save()) {
             $response = [
                 'messages' => [
@@ -200,7 +214,7 @@ class ContentController extends Controller
             return response()->json([
                 'messages' => [
                     'status' => 0,
-                    'message' => 'Failed to updated home contents.'
+                    'message' => 'Failed to update home contents.'
                 ]
             ]);
         }
@@ -209,9 +223,14 @@ class ContentController extends Controller
     function updateAnnouncement($announcement_id, Request $req){
         $announcement = Announcement::find($announcement_id);
         $announcement->title=$req->input('title');
-        $announcement->cover_image=$req->file('image')->store('assets');
+        // $announcement->cover_image=$req->file('image')->store('assets');
         $announcement->description=$req->input('description');
         $announcement->updated_at=Carbon::now();
+
+        if ($req->hasFile('image')) {
+            $announcement->cover_image=$req->file('image')->store('assets');
+        }
+
         $announcement->save();
         if ($announcement->save()) {
             $response = [
@@ -235,9 +254,13 @@ class ContentController extends Controller
     function updateProjects($projects_id, Request $req){
         $projects = Project::find($projects_id);
         $projects->project_title=$req->input('project_title');
-        $projects->cover_image=$req->file('image')->store('assets');
         $projects->project_description=$req->input('project_description');
         $projects->updated_at=Carbon::now();
+
+        if ($req->hasFile('image')) {
+            $projects->cover_image=$req->file('image')->store('assets');
+        }
+
         $projects->save();
         if ($projects->save()) {
             $response = [
@@ -261,11 +284,17 @@ class ContentController extends Controller
     function updateAbout($club_id, Request $req){
         $about = Club::find($club_id);
         $about->club_name=$req->input('club_name');
-        $about->cover_image=$req->file('cover_image')->store('assets');
+        // $about->cover_image=$req->file('cover_image')->store('assets');
         $about->vision_content=$req->input('vision_content');
-        $about->club_logo=$req->file('logo')->store('assets');
+        // $about->club_logo=$req->file('logo')->store('assets');
+        if ($req->hasFile('logo')) {
+            $about->club_logo=$req->file('logo')->store('assets');
+        }
         $about->mission_content=$req->input('mission_content');
-        $about->club_post_image=$req->file('post_image')->store('assets');
+        // $about->club_post_image=$req->file('post_image')->store('assets');
+        if ($req->hasFile('post_image')) {
+            $about->club_post_image=$req->file('post_image')->store('assets');
+        }
         // $about->updated_at=Carbon::now();
         $about->save();
         if ($about->save()) {
@@ -291,7 +320,10 @@ class ContentController extends Controller
         $officer = Officers::find($official_id);
         $officer->official_name=$req->input('official_name');
         $officer->official_position=$req->input('official_position');
-        $officer->official_image=$req->file('official_image')->store('assets');
+        // $officer->official_image=$req->file('official_image')->store('assets');
+        if ($req->hasFile('official_image')) {
+            $officer->official_image=$req->file('official_image')->store('assets');
+        }
         $officer->official_description=$req->input('official_description');
         $officer->save();
         if ($officer->save()) {
