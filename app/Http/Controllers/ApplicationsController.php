@@ -9,22 +9,39 @@ use App\Models\Member_Applications;
 use Illuminate\Support\Facades\File; // Add this import statement
 use Illuminate\Support\Facades\Storage;
 use mikehaertl\pdftk\Pdf;
+use Illuminate\Support\Facades\DB;
+
+use App\Mail\AspirantSuccessMail;
+use Illuminate\Support\Facades\Mail;
 
 class ApplicationsController extends Controller
 {
     // POSTS REQUESTS
-    function addApplication(Request $req){
+    function addApplication(Request $req) {
         $application = new Applications;
-        $application->firstname=$req->input('firstname');
-        $application->middlename=$req->input('middlename');
-        $application->lastname=$req->input('lastname');
-        $application->email=$req->input('email');
-        $application->number=$req->input('number');
-        // $application->application_file=$req->input('application_file');
-        $application->application_file=$req->file('application_file')->store('magiting_laguna/applications');
-        $application->club_id=$req->input('club_id');
-        // return $project;
+        $application->firstname = $req->input('firstname');
+        $application->middlename = $req->input('middlename');
+        $application->lastname = $req->input('lastname');
+        $application->email = $req->input('email');
+        $application->number = $req->input('number');
+        $application->application_file = $req->file('application_file')->store('magiting_laguna/applications');
+        $application->club_id = $req->input('club_id');
+    
         if ($application->save()) {
+            // Fetch the club name
+            $club = DB::table('tbl_clubs')
+                ->where('club_id', $application->club_id)
+                ->first();
+    
+            // Prepare email data
+            $emailData = [
+                'application' => $application,
+                'club_name' => $club->club_name,
+            ];
+    
+            // Send email after successful save
+            Mail::to($application->email)->send(new AspirantSuccessMail($emailData));
+    
             // If record creation is successful
             $response = [
                 'messages' => [
@@ -52,7 +69,6 @@ class ApplicationsController extends Controller
         $application->lastname=$req->input('lastname');
         $application->email=$req->input('email');
         $application->number=$req->input('number');
-        // $application->application_file=$req->input('application_file');
         $application->application_file=$req->file('application_file')->store('magiting_laguna/applications');
         $application->club_id=$req->input('club_id');
         $application->position=$req->input('position');
