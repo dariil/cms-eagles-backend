@@ -43,6 +43,7 @@ class UserController extends Controller
         $user->first_name = $req->input('first_name');
         $user->middle_name = $req->input('middle_name');
         $user->last_name = $req->input('last_name');
+        $user->position = $req->input('position');
         $user->number = $req->input('number');
         $user->email = $req->input('email');
         $user->password = Hash::make($req->input('password'));
@@ -79,6 +80,7 @@ class UserController extends Controller
                          'first_name' => $user->first_name,
                          'middle_name' => $user->middle_name,
                          'last_name' => $user->last_name,
+                         'position' => $user->position,
                          'number' => $user->number,
                          'email' => $user->email,
                          'access_level' => $user->access_level,
@@ -108,6 +110,7 @@ class UserController extends Controller
                     'first_name' => $user->first_name,
                     'middle_name' => $user->middle_name,
                     'last_name' => $user->last_name,
+                    'position' => $user->position,
                     'number' => $user->number,
                     'email' => $user->email,
                     'access_level' => $user->access_level,
@@ -125,7 +128,25 @@ class UserController extends Controller
     }
 
     function getOneUser($user_id){
-        $users = User::where('user_id', $user_id)->get();
+        $users = User::where('user_id', $user_id)
+            ->with('club:club_id,club_name')
+            ->get()
+            ->map(function ($user){
+                return [
+                    'user_id' => $user->user_id,
+                    'club_id' => $user->club_id,
+                    'first_name' => $user->first_name,
+                    'middle_name' => $user->middle_name,
+                    'last_name' => $user->last_name,
+                    'position' => $user->position,
+                    'number' => $user->number,
+                    'email' => $user->email,
+                    'access_level' => $user->access_level,
+                    'date_created' => $user->date_created,
+                    'club_id' => $user->club->club_id,
+                    'club_name' => $user->club->club_name,
+                ];
+            });
         return response()->json($users);
     }
 
@@ -135,6 +156,7 @@ class UserController extends Controller
         $user->first_name = $req->input('first_name');
         $user->middle_name = $req->input('middle_name');
         $user->last_name = $req->input('last_name');
+        $user->position = $req->input('position');
         $user->number = $req->input('number');
         $user->email = $req->input('email');
         $user->access_level = $req->input('access_level');
