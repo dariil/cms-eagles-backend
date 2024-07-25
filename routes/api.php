@@ -54,8 +54,16 @@ Route::get('getOfficials/{club_id}',[ContentController::class, 'getOfficials']);
 Route::get('getOneOfficer/{officer_id}',[ContentController::class, 'getOneOfficer']);
 Route::get('getRecentAnnouncement/{club_id}',[ContentController::class, 'getRecentAnnouncement']);
 Route::get('getRecentProject/{club_id}',[ContentController::class, 'getRecentProject']);
+Route::get('countAnnouncements/{club_id}',[ContentController::class, 'countAnnouncements']);
+Route::get('countProjects/{club_id}',[ContentController::class, 'countProjects']);
+Route::get('countOfficers/{club_id}',[ContentController::class, 'countOfficers']);
+Route::get('getFiveRecentAnnouncement/{club_id}',[ContentController::class, 'getFiveRecentAnnouncement']);
+Route::get('getFiveRecentProjects/{club_id}',[ContentController::class, 'getFiveRecentProjects']);
+Route::get('getFiveRecentOfficers/{club_id}',[ContentController::class, 'getFiveRecentOfficers']);
 Route::get('getApplications/{club_id}',[ApplicationsController::class, 'getApplications']);
 Route::get('getMemberApplications/{club_id}',[ApplicationsController::class, 'getMemberApplications']);
+Route::get('countAspirants/{club_id}',[ApplicationsController::class, 'countAspirants']);
+Route::get('countMembers/{club_id}',[ApplicationsController::class, 'countMembers']);
 
 Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function () {
     Route::get('getOneApplication/{club_id}', [ApplicationsController::class, 'getOneApplication']);

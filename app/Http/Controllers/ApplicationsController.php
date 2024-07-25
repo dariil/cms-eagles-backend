@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 use App\Mail\AspirantSuccessMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 
 class ApplicationsController extends Controller
 {
@@ -177,6 +179,22 @@ class ApplicationsController extends Controller
             // Handle the case when the file doesn't exist
             return response()->json(['error' => 'File not found']);
         }
+    }
+
+    function countAspirants($club_id)
+    {
+        $count = DB::table('tbl_applications_aspirants')
+            ->where('club_id', $club_id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+        
+        return response()->json(['count' => $count]);
+    }
+
+    function countMembers($club_id)
+    {
+        $count = DB::table('tbl_applications_members')->where('club_id', $club_id)->count();
+        return response()->json(['count' => $count]);
     }
 
     //UPDATE REQUESTS

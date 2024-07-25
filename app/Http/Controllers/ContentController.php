@@ -11,6 +11,9 @@ use App\Models\Home;
 use App\Models\Officers;
 use Carbon\Carbon;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+
 class ContentController extends Controller
 {
     //
@@ -179,6 +182,39 @@ class ContentController extends Controller
 
     function getOneOfficer($officer_id){
         $officers = Officers::where('official_id', $officer_id)->get();
+        return response()->json($officers);
+    }
+
+    function countAnnouncements($club_id)
+    {
+        $count = DB::table('tbl_announcements')->where('club_id', $club_id)->count();
+        return response()->json(['count' => $count]);
+    }
+
+    function countProjects($club_id)
+    {
+        $count = DB::table('tbl_projects')->where('club_id', $club_id)->count();
+        return response()->json(['count' => $count]);
+    }
+
+    function countOfficers($club_id)
+    {
+        $count = DB::table('tbl_officials')->where('club_id', $club_id)->count();
+        return response()->json(['count' => $count]);
+    }
+
+    function getFiveRecentAnnouncement($club_id){
+        $announcement = Announcement::orderBy('created_at', 'desc')->where('club_id', $club_id)->take(5)->get();
+        return response()->json($announcement);
+    }
+
+    function getFiveRecentProjects($club_id){
+        $project = Project::orderBy('created_at', 'desc')->where('club_id', $club_id)->take(5)->get();
+        return response()->json($project);
+    }
+
+    function getFiveRecentOfficers($club_id){
+        $officers = Officers::orderBy('created_at', 'desc')->where('club_id', $club_id)->take(5)->get();
         return response()->json($officers);
     }
 
