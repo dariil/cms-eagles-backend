@@ -10,8 +10,10 @@ class Club extends Model
     use HasFactory;
 
     protected $table = 'tbl_clubs'; //THIS LINE LETS LARAVEL KNOW THAT THE USERS TABLE IS NAMES AS tbl_users
+    public $incrementing = false;
     protected $primaryKey = 'club_id'; // THIS LINE LETS LARAVEL KNOW THAT THIS IS THE PRIMARY KEY
     protected $fillable = [
+        'club_id',
         'club_code',
         'club_name',
         'cover_image',

@@ -25,8 +25,7 @@ class ArchivesController extends Controller
 {
     //GET FUNCTIONS
     function getAllArchivedUsers() {
-        $users = Account_Archive::with('club:club_id,club_name')
-            ->get()
+        $users = Account_Archive::get()
             ->map(function ($user) {
                 return [
                     'user_id' => $user->user_id,
@@ -124,6 +123,7 @@ class ArchivesController extends Controller
                 'first_name' => $user->first_name,
                 'middle_name' => $user->middle_name,
                 'last_name' => $user->last_name,
+                'position' => $user->position,
                 'number' => $user->number,
                 'email' => $user->email,
                 'password' => $user->password,
@@ -441,10 +441,12 @@ class ArchivesController extends Controller
     
             // Create a new Announcement
             $newUser = new User([
+                'user_id' => $archivedUser->user_id,
                 'club_id' => $archivedUser->club_id,
                 'first_name' => $archivedUser->first_name,
                 'middle_name' => $archivedUser->middle_name,
                 'last_name' => $archivedUser->last_name,
+                'position' => $archivedUser->position,
                 'number' => $archivedUser->number,
                 'email' => $archivedUser->email,
                 'password' => $archivedUser->password,
@@ -493,6 +495,7 @@ class ArchivesController extends Controller
     
             // Create a new Announcement
             $newAnnouncement = new Announcement([
+                'announcement_id' => $archivedAnnouncement->announcement_id,
                 'club_id' => $archivedAnnouncement->club_id,
                 'title' => $archivedAnnouncement->title,
                 'description' => $archivedAnnouncement->description,
@@ -542,6 +545,7 @@ class ArchivesController extends Controller
     
             // Create a new Announcement
             $newProject = new Project([
+                'project_id' => $archivedProject->project_id,
                 'club_id' => $archivedProject->club_id,
                 'project_title' => $archivedProject->project_title,
                 'project_description' => $archivedProject->project_description,
@@ -591,6 +595,7 @@ class ArchivesController extends Controller
     
             // Create a new Announcement
             $newOfficial = new Officers([
+                'official_id' => $archivedOfficial->official_id,
                 'club_id' => $archivedOfficial->club_id,
                 'official_name' => $archivedOfficial->official_name,
                 'official_position' => $archivedOfficial->official_position,

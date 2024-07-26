@@ -10,6 +10,7 @@ class Account_Archive extends Model
     use HasFactory;
 
     protected $table = 'tbl_archived_accounts'; //THIS LINE LETS LARAVEL KNOW THAT THE USERS TABLE IS NAMES AS tbl_users
+    public $incrementing = false;
     protected $primaryKey = 'user_id'; // THIS LINE LETS LARAVEL KNOW THAT THIS IS THE PRIMARY KEY
     protected $fillable = [
         'user_id',
@@ -17,6 +18,7 @@ class Account_Archive extends Model
         'first_name',
         'middle_name',
         'last_name',
+        'position',
         'number',
         'email',
         'password',

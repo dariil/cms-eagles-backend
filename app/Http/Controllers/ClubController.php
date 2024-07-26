@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Club;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ClubController extends Controller
 {
     //
     function addClub(Request $req){
         $club = new Club;
+        $club_id_config = ['table'=>'tbl_clubs', 'field'=>'club_id','length'=>10,'prefix'=>'CLB-'];
+        $club->club_id=IdGenerator::generate($club_id_config);
         $club->club_code=$req->input('club_code');
         $club->club_name=$req->input('club_name');
         $club->cover_image=$req->file('cover_image')->store('assets');

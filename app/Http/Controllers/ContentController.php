@@ -13,6 +13,7 @@ use Carbon\Carbon;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ContentController extends Controller
 {
@@ -20,10 +21,15 @@ class ContentController extends Controller
     //   POSTS REQUESTS //////////////////////////////////////
     function addHome(Request $req){
         $home = new Home;
+        $home_id_config = ['table'=>'tbl_home', 'field'=>'home_id','length'=>10,'prefix'=>'HOME-'];
+        $home->home_id=IdGenerator::generate($home_id_config);
         $home->club_id=$req->input('club_id');
         $home->logo=$req->file('logo')->store('assets');
         $home->description=$req->input('description');
-        $home->updated_by=$req->input('updated_by');
+        $home->hero_title=$req->input('hero_title');
+        $home->hero_video=$req->file('hero_video')->store('assets');
+        $home->hero_tagline=$req->input('hero_tagline');
+        // $home->updated_by=$req->input('updated_by');
 
         if ($home->save()) {
             // If record creation is successful
@@ -48,6 +54,8 @@ class ContentController extends Controller
 
     function addAnnouncement($club_id, Request $req){
         $announcement = new Announcement;
+        $announcement_id_config = ['table'=>'tbl_announcements', 'field'=>'announcement_id','length'=>10,'prefix'=>'ANC-'];
+        $announcement->announcement_id=IdGenerator::generate($announcement_id_config);
         $announcement->club_id=$club_id;
         $announcement->title=$req->input('title');
         $announcement->description=$req->input('description');
@@ -77,6 +85,8 @@ class ContentController extends Controller
 
     function addProjects(Request $req){
         $project = new Project;
+        $project_id_config = ['table'=>'tbl_projects', 'field'=>'project_id','length'=>10,'prefix'=>'PRJ-'];
+        $project->project_id=IdGenerator::generate($project_id_config);
         $project->club_id=$req->input('club_id');
         $project->project_title=$req->input('project_title');
         $project->project_description=$req->input('project_description');
@@ -106,6 +116,8 @@ class ContentController extends Controller
 
     function addOfficers($club_id, Request $req){
         $officers = new Officers;
+        $officer_id_config = ['table'=>'tbl_officials', 'field'=>'official_id','length'=>10,'prefix'=>'OFC-'];
+        $officers->official_id=IdGenerator::generate($officer_id_config);
         // $officers->club_id=$req->input('club_id');
         $officers->club_id=$club_id;
         $officers->official_name=$req->input('official_name');

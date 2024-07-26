@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Club;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
 use Validator;
 use Auth;
+
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class UserController extends Controller
 {
@@ -39,6 +42,8 @@ class UserController extends Controller
     //ADD REQUESTS
     function addUser(Request $req): JsonResponse {
         $user = new User;
+        $user_id_config = ['table'=>'tbl_users', 'field'=>'user_id','length'=>10,'prefix'=>'MBMR-'];
+        $user->user_id = IdGenerator::generate($user_id_config);
         $user->club_id = $req->input('club_member');
         $user->first_name = $req->input('first_name');
         $user->middle_name = $req->input('middle_name');
@@ -101,7 +106,6 @@ class UserController extends Controller
 
     function getUsersInClub($club_id, $access_level){
         $users = User::where('club_id', $club_id)->where('access_level', $access_level)
-            ->with('club:club_id,club_name')
             ->get()
             ->map(function ($user){
                 return [
@@ -115,7 +119,7 @@ class UserController extends Controller
                     'email' => $user->email,
                     'access_level' => $user->access_level,
                     'date_created' => $user->date_created,
-                    'club_id' => $user->club->club_id,
+                    // 'club_id' => $user->club->club_id,
                     'club_name' => $user->club->club_name,
                 ];
             });

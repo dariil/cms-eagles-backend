@@ -19,8 +19,10 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $table = 'tbl_users'; //THIS LINE LETS LARAVEL KNOW THAT THE USERS TABLE IS NAMES AS tbl_users
+    public $incrementing = false;
     protected $primaryKey = 'user_id'; // THIS LINE LETS LARAVEL KNOW THAT THIS IS THE PRIMARY KEY
     protected $fillable = [
+        'user_id',
         'club_id',
         'first_name',
         'middle_name',
