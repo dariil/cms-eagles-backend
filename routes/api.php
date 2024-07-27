@@ -70,6 +70,9 @@ Route::middleware(\App\Http\Middleware\CorsMiddleware::class)->group(function ()
     Route::get('getOneMemberApplication/{club_id}', [ApplicationsController::class, 'getOneMemberApplication']);
 });
 
+Route::get('getSevenRecentApplications/{club_id}', [ApplicationsController::class, 'getSevenRecentApplications']);
+Route::get('getSevenRecentMemberApplications/{club_id}', [ApplicationsController::class, 'getSevenRecentMemberApplications']);
+
 Route::get('getApplicationDetails/{filename}', [ApplicationsController::class, 'getApplicationDetails']);
 Route::get('get-pdf/{applicationID}', [ApplicationsController::class, 'getPdf']);
 Route::get('getMemberPdf/{applicationID}', [ApplicationsController::class, 'getMemberPdf']);

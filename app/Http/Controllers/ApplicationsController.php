@@ -121,8 +121,51 @@ class ApplicationsController extends Controller
         return response()->json($applications);
     }
 
+    public function getSevenRecentApplications($club_id)
+    {
+        $applications = Applications::orderBy('created_at', 'desc')
+            ->where('club_id', $club_id)
+            ->take(7)
+            ->get();
+
+        $data = $this->formatData($applications);
+
+        return response()->json($data);
+    }
+
+    private function formatData($applications)
+    {
+        $dates = [];
+        
+        // Count the number of applications for each date
+        foreach ($applications as $application) {
+            $date = Carbon::parse($application->created_at)->format('Y-m-d');
+            if (!isset($dates[$date])) {
+                $dates[$date] = 0;
+            }
+            $dates[$date]++;
+        }
+
+        // Prepare labels and values arrays
+        $labels = array_keys($dates);
+        $values = array_values($dates);
+
+        // Ensure labels and values are sorted by date
+        array_multisort($labels, SORT_ASC, $values);
+
+        return [
+            'labels' => $labels,
+            'values' => $values,
+        ];
+    }
+
     function getMemberApplications($club_id){
         $applications = Member_Applications::where('club_id', $club_id)->get();
+        return response()->json($applications);
+    }
+
+    function getSevenRecentMemberApplications($club_id){
+        $applications = Member_Applications::orderBy('created_at', 'desc')->where('club_id', $club_id)->take(7)->get();
         return response()->json($applications);
     }
 
