@@ -640,6 +640,7 @@ class ArchivesController extends Controller
     
             // Create a new Announcement
             $newApplication = new Applications([
+                'application_id' => $archivedApplication->application_id,
                 'firstname' => $archivedApplication->firstname,
                 'middlename' => $archivedApplication->middlename,
                 'lastname' => $archivedApplication->lastname,
@@ -686,6 +687,7 @@ class ArchivesController extends Controller
     
             // Create a new Announcement
             $newApplication = new Member_Applications([
+                'member_application_id' => $archivedApplication->member_application_id,
                 'firstname' => $archivedApplication->firstname,
                 'middlename' => $archivedApplication->middlename,
                 'lastname' => $archivedApplication->lastname,

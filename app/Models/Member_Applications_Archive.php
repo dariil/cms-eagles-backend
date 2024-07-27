@@ -10,6 +10,7 @@ class Member_Applications_Archive extends Model
     use HasFactory;
 
     protected $table = 'tbl_archived_member_applications'; //THIS LINE LETS LARAVEL KNOW THAT THE USERS TABLE IS NAMES AS tbl_users
+    public $incrementing = false;
     protected $primaryKey = 'member_application_id'; // THIS LINE LETS LARAVEL KNOW THAT THIS IS THE PRIMARY KEY
     protected $fillable = [
         'member_application_id',

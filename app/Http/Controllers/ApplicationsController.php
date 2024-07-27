@@ -15,12 +15,15 @@ use App\Mail\AspirantSuccessMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ApplicationsController extends Controller
 {
     // POSTS REQUESTS
     function addApplication(Request $req) {
         $application = new Applications;
+        $application_id_config = ['table'=>'tbl_applications_aspirants', 'field'=>'application_id','length'=>10,'prefix'=>'AAP'];
+        $application->application_id=IdGenerator::generate($application_id_config);
         $application->firstname = $req->input('firstname');
         $application->middlename = $req->input('middlename');
         $application->lastname = $req->input('lastname');
@@ -66,6 +69,8 @@ class ApplicationsController extends Controller
 
     function addMemberApplication(Request $req){
         $application = new Member_Applications;
+        $application_member_id_config = ['table'=>'tbl_applications_members', 'field'=>'member_application_id','length'=>10,'prefix'=>'AAM'];
+        $application->member_application_id=IdGenerator::generate($application_member_id_config);
         $application->firstname=$req->input('firstname');
         $application->middlename=$req->input('middlename');
         $application->lastname=$req->input('lastname');
