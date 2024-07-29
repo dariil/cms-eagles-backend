@@ -8,6 +8,7 @@ use App\Models\Applications;
 use App\Models\Member_Applications;
 use Illuminate\Support\Facades\File; // Add this import statement
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 use mikehaertl\pdftk\Pdf;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +16,7 @@ use App\Mail\AspirantSuccessMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ApplicationsController extends Controller
@@ -67,6 +69,44 @@ class ApplicationsController extends Controller
         }
     }
 
+    // DI TALAGA GAGANA TO KASI FOR U.S ONLY ITO
+    // private function sendSms($phoneNumber, $message) {
+    //     $apiUrl = 'http://192.168.1.3:8082'; // Note: no additional path
+    //     $token = 'dJl9Uom7QRuQYD4CtuNn23:APA91bFDDG8yn4AsY1uuaar2nF0FTf9IHlvGh9dJnDqZs4Dnu95TJMfdqpaG3-lRGAr2kIWtJgITvKXzdcz_xhZVJh8h275wliz64dPqjtRjQZnuTqr-gxTOWCr1ASNPk8L_XNin9lpC';
+    
+    //     try {
+    //         $response = Http::withToken($token)
+    //             ->withHeaders(['Content-Type' => 'application/json'])
+    //             ->post($apiUrl, [
+    //                 'to' => '+19762947711',
+    //                 'message' => $message,
+    //             ]);
+    
+    //         if ($response->successful()) {
+    //             return $response->json();
+    //         } else {
+    //             Log::error('Failed to send SMS', [
+    //                 'status' => $response->status(),
+    //                 'body' => $response->body(),
+    //                 'headers' => $response->headers()
+    //             ]);
+    //             throw new \Exception('Failed to send SMS: ' . $response->body());
+    //         }
+    //     } catch (\Exception $e) {
+    //         Log::error('Exception occurred while sending SMS', [
+    //             'message' => $e->getMessage(),
+    //             'trace' => $e->getTraceAsString()
+    //         ]);
+    //         throw new \Exception('Failed to send SMS: ' . $e->getMessage());
+    //     }
+    // }
+
+    //GET REQUESTS
+    function getApplications($club_id){
+        $applications = Applications::where('club_id', $club_id)->get();
+        return response()->json($applications);
+    }
+
     function addMemberApplication(Request $req){
         $application = new Member_Applications;
         $application_member_id_config = ['table'=>'tbl_applications_members', 'field'=>'member_application_id','length'=>10,'prefix'=>'AAM'];
@@ -94,6 +134,7 @@ class ApplicationsController extends Controller
     
             // Send email after successful save
             Mail::to($application->email)->send(new AspirantSuccessMail($emailData));
+            // $this->sendSms($req->input('number'), 'Hello, this is a test message!');
 
             // If record creation is successful
             $response = [
@@ -113,12 +154,6 @@ class ApplicationsController extends Controller
                 ]
             ]);
         }
-    }
-
-    //GET REQUESTS
-    function getApplications($club_id){
-        $applications = Applications::where('club_id', $club_id)->get();
-        return response()->json($applications);
     }
 
     public function getSevenRecentApplications($club_id)
@@ -241,7 +276,11 @@ class ApplicationsController extends Controller
 
     function countMembers($club_id)
     {
-        $count = DB::table('tbl_applications_members')->where('club_id', $club_id)->count();
+        $count = DB::table('tbl_applications_members')
+            ->where('club_id', $club_id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+        
         return response()->json(['count' => $count]);
     }
 

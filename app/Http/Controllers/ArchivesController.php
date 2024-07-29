@@ -812,9 +812,19 @@ class ArchivesController extends Controller
         }
     }
 
-    function deleteApplication($application_id){
+    function deleteApplication($application_id, Request $req){
         $result = Application_Archive::where('application_id', $application_id)->delete();
         if($result){
+
+            if ($req->hasFile('application_file')) {
+                // Delete the old file
+                if ($application->application_file) {
+                    Storage::delete($application->application_file);
+                }
+                // Store the new file
+                // $application->application_file = $req->file('application_file')->store('magiting_laguna/applications');
+            }
+
             $response = [
                 'messages' => [
                     'status' => 1,
@@ -833,9 +843,20 @@ class ArchivesController extends Controller
         }
     }
 
-    function deleteMemberApplication($application_id){
+    function deleteMemberApplication($application_id, Request $req){
         $result = Member_Applications_Archive::where('member_application_id', $application_id)->delete();
         if($result){
+
+            if ($req->hasFile('application_file')) {
+                // Delete the old file
+                if ($application->application_file) {
+                    Storage::delete($application->application_file);
+                }
+                
+                // Store the new file
+                // $application->application_file = $req->file('application_file')->store('magiting_laguna/applications');
+            }
+
             $response = [
                 'messages' => [
                     'status' => 1,
