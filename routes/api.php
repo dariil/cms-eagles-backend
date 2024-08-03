@@ -59,7 +59,7 @@ Route::get('countProjects/{club_id}',[ContentController::class, 'countProjects']
 Route::get('countOfficers/{club_id}',[ContentController::class, 'countOfficers']);
 Route::get('getFiveRecentAnnouncement/{club_id}',[ContentController::class, 'getFiveRecentAnnouncement']);
 Route::get('getFiveRecentProjects/{club_id}',[ContentController::class, 'getFiveRecentProjects']);
-Route::get('getFiveRecentOfficers/{club_id}',[ContentController::class, 'getFiveRecentOfficers']);
+Route::get('getAllAspirantEmail/{club_id}',[ContentController::class, 'getAllAspirantEmail']);
 Route::get('getApplications/{club_id}',[ApplicationsController::class, 'getApplications']);
 Route::get('getMemberApplications/{club_id}',[ApplicationsController::class, 'getMemberApplications']);
 Route::get('countAspirants/{club_id}',[ApplicationsController::class, 'countAspirants']);

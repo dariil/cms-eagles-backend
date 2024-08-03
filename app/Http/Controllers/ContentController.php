@@ -9,7 +9,12 @@ use App\Models\Club;
 use App\Models\Project;
 use App\Models\Home;
 use App\Models\Officers;
+use App\Models\Applications;
+use App\Models\Member_Applications;
 use Carbon\Carbon;
+
+use App\Mail\AnnouncementMail;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +57,32 @@ class ContentController extends Controller
         }
     }
 
+    // TEST AREA
+
+    function getAllAspirantEmail($club_id){
+        $applications = Applications::where('club_id', $club_id)->get();
+        $emails = $applications->pluck('email');
+        $oneApplication = Applications::where('application_id', "AAP0000001")->get();
+
+        $emailData = [
+            'application' => $oneApplication,
+        ];
+
+        // Send email after successful save
+        Mail::to($emails)->send(new AnnouncementMail($emailData));
+        // $this->sendSms($req->input('number'), 'Hello, this is a test message!');
+
+        return response()->json($emails);
+    }
+
+    function getAllMemberEmail($club_id){
+        $applications = Member_Applications::where('club_id', $club_id)->get();
+        $emails = $applications->pluck('email');
+        return response()->json($emails);
+    }
+
+    // TEST AREA END
+
     function addAnnouncement($club_id, Request $req){
         $announcement = new Announcement;
         $announcement_id_config = ['table'=>'tbl_announcements', 'field'=>'announcement_id','length'=>10,'prefix'=>'ANC-'];
@@ -61,9 +92,24 @@ class ContentController extends Controller
         $announcement->description=$req->input('description');
         $announcement->cover_image=$req->file('cover_image')->store('assets');
         $announcement->created_by=$req->input('created_by');
-        // return $announcement;
+
         if ($announcement->save()) {
-            // If record creation is successful
+
+            $applications = Applications::where('club_id', $club_id)->get();
+            $emails = $applications->pluck('email');
+
+            $club = DB::table('tbl_clubs')
+                ->where('club_id', $announcement->club_id)
+                ->first();
+
+            $emailData = [
+                'announcement' => $announcement,
+                'club_code' => $club->club_code,
+            ];
+
+            // Send email after successful save
+            Mail::to($emails)->send(new AnnouncementMail($emailData));
+
             $response = [
                 'messages' => [
                     'status' => 1,
